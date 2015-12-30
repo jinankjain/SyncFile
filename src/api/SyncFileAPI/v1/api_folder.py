@@ -48,7 +48,7 @@ def mkdir(req_path, req_username):
 			folder_item = FileSys(id=folder_guid, parentid=folder_parentid, type=folder_type, size=folder_size, createdate=folder_current_date, creator=folder_creator, foldername=folder_foldername, path=folder_path)
 			folder_item.save()
 		else:
-			response_data = create_basic_json_response(1102, 'folder path error. the parent folde should be created firstly. and use \\', 'error')
+			response_data = create_basic_json_response(1102, 'folder path error. the parent folder should be created firstly.', 'error')
 	return response_data
 
 def get_folder_detail(req_path, req_username):
@@ -135,10 +135,6 @@ def api_folder(request):
 	req_username = UserAuthID.objects.filter(authID = req_auth_id)[0].userName
 	response_data = ''
 	
-	#path format validation
-	if(req_path.split('\\')[len(req_path.split('\\'))-1] == ''):
-		response_data = create_basic_json_response(1103, 'folder path should not ended with \\', 'error')
-		return response_data
 	
 	if(req_op=='mkdir'):
 		response_data = mkdir(req_path, req_username)

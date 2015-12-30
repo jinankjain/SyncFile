@@ -2,6 +2,7 @@ from django.test import TestCase
 import unittest
 import requests
 import json
+import os
 
 # Create your tests here.
 # Run single test case: manage.py test v1.tests.TestAPIV1.test005_api_getAuthID_101120
@@ -66,19 +67,21 @@ class TestAPIV1(unittest.TestCase):
 		
 	def test011_api_folder_mkdir_1102(self):
 		#make sure user testuser1 registered(in DB). And dir testuser1 existed
+		# Testing if root folder does not exists
 		req = requests.get('http://localhost:8000/v1/getAuthID?username=testuser1&password=123')#exist username & password
 		answer = req.json()
-		req = requests.get('http://localhost:8000/v1/folder?op=mkdir&authid={0}&path=book\lol\ooo\lol\ooo'.format(answer['authid']))
+		req = requests.get('http://localhost:8000/v1/folder?op=mkdir&authid={0}&path={1}'.format(answer['authid'], os.path.join("book","xxx","yyy","zzz")))
 		answer = req.json()
 		self.assertEqual(answer['error_code'], 1102)
 		
-	def test012_api_folder_mkdir_1103(self):
+	def test012_api_folder_mkdir_1100(self):
 		#make sure user testuser1 registered(in DB). And dir testuser1 existed
+		# Testing creating of nested folder
 		req = requests.get('http://localhost:8000/v1/getAuthID?username=testuser1&password=123')#exist username & password
 		answer = req.json()
-		req = requests.get('http://localhost:8000/v1/folder?op=mkdir&authid={0}&path=book\lol\\'.format(answer['authid']))
+		req = requests.get('http://localhost:8000/v1/folder?op=mkdir&authid={0}&path={1}'.format(answer['authid'], os.path.join("book","lol")))
 		answer = req.json()
-		self.assertEqual(answer['error_code'], 1103)
+		self.assertEqual(answer['error_code'], 1100)
 		
 	def test013_api_folder_detail_1120_root(self):
 		#make sure user testuser1 registered(in DB). And dir testuser1 existed
